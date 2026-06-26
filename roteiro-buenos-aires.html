@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Buenos Aires · Roteiro de Família</title>
+<style>
+  :root{
+    --bg: #1c1410;
+    --paper: #fbf6ec;
+    --ink: #241a14;
+    --ink-soft: #5c4d40;
+    --line: #e3d6bd;
+    --gold: #b9893e;
+    --c1: #c1592f;
+    --c2: #9c4423;
+    --c3: #f4e3d3;
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0;}
+  body{
+    background: var(--bg);
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  .sans{ font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; }
+
+  .app{
+    max-width: 580px;
+    margin: 0 auto;
+    background: var(--paper);
+    min-height: 100vh;
+    position: relative;
+    box-shadow: 0 0 80px rgba(0,0,0,.55);
+  }
+
+  /* simple, non-sticky top label */
+  .toplabel{
+    text-align:center;
+    padding: 14px 0 10px;
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* ===================== TABS (not sticky) ===================== */
+  .tabs{
+    display:flex; overflow-x:auto; background: #f0e6d2;
+    border-bottom: 1px solid var(--line);
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex: 1 0 auto; font-family: -apple-system, sans-serif; padding: 11px 10px 9px;
+    text-align:center; cursor:pointer; border-bottom: 4px solid transparent;
+    color: var(--ink-soft); min-width: 58px; transition: background .15s;
+  }
+  .tab .d{font-size:21px; font-weight:700; font-family: 'Iowan Old Style', Georgia, serif;}
+  .tab .wd{font-size:13px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; margin-top:1px;}
+  .tab .m{font-size:11px; letter-spacing:.06em; text-transform:uppercase; opacity:.7;}
+  .tab.phrasetab{ border-left: 1px solid var(--line); }
+  .tab.phrasetab .d{ font-size:20px; }
+  .tab.active{ color: var(--day-color, var(--c2)); border-bottom-color: var(--day-color, var(--c1)); background: var(--paper); }
+
+  /* ===================== DAY PANELS ===================== */
+  .day{ display:none; }
+  .day.active{ display:block; animation: fade .25s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:none;} }
+
+  .day-banner{
+    padding: 22px 20px 18px;
+    background: linear-gradient(165deg, var(--c1), var(--c2));
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .day-banner::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle at 92% 10%, rgba(255,255,255,.16), transparent 45%);
+  }
+  .day-banner-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; position:relative; }
+  .day-banner h2{ font-size: 26px; margin: 0 0 3px; line-height:1.2; }
+  .day-tag{ font-family: -apple-system, sans-serif; font-size: 15px; opacity:.94; font-weight:600; }
+  .stamp{
+    flex:0 0 auto; width:50px; height:50px; border:2px solid rgba(255,255,255,.85); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; transform: rotate(-8deg);
+    color: #fff; font-family: -apple-system, sans-serif; font-size: 9.5px; font-weight:700;
+    letter-spacing:.03em; text-align:center; line-height:1.15; opacity:.92;
+  }
+  .pace{
+    display:inline-flex; align-items:center; gap:6px; font-family: -apple-system, sans-serif;
+    font-size: 12.5px; letter-spacing:.03em; text-transform:uppercase; background: rgba(255,255,255,.18);
+    color:#fff; border: 1px solid rgba(255,255,255,.4); padding: 4px 10px; border-radius: 100px;
+    margin-top: 12px; position:relative;
+  }
+
+  .day-body{ padding: 18px 18px 8px; }
+
+  /* day summary chips - clickable, jump to section */
+  .summary-row{
+    display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; margin-bottom: 18px; scrollbar-width:none;
+  }
+  .summary-row::-webkit-scrollbar{display:none;}
+  .sumcard{
+    flex: 0 0 auto; width: 92px; background: var(--c3); border-radius: 10px; padding: 8px 8px 7px;
+    text-align:center; font-family:-apple-system, sans-serif; border: 1px solid var(--line);
+    cursor:pointer; transition: transform .12s, background .12s; -webkit-tap-highlight-color: transparent;
+  }
+  .sumcard:active{ transform: scale(0.95); background: var(--c1); }
+  .sumcard:active .tt{ color:#fff; }
+  .sumcard .ic{ font-size: 22px; margin-bottom:3px; }
+  .sumcard .tt{ font-size: 11.5px; font-weight:700; color: var(--c2); line-height:1.3; }
+
+  /* ===================== TIMELINE ===================== */
+  .timeline{ position: relative; padding-left: 22px; border-left: 2px dashed var(--line); margin-left: 7px; }
+  .step{ position: relative; margin-bottom: 26px; scroll-margin-top: 14px; }
+  .step::before{
+    content:""; position:absolute; left: -29px; top: 3px; width: 13px; height:13px;
+    border-radius:50%; background: var(--paper); border: 2.5px solid var(--c1);
+  }
+  .step.flash::before{ background: var(--c1); animation: pulse 1.2s ease; }
+  @keyframes pulse{ 0%{ box-shadow: 0 0 0 0 rgba(193,89,47,.5);} 100%{ box-shadow: 0 0 0 12px rgba(193,89,47,0);} }
+  .step .time{ font-family: -apple-system, sans-serif; font-size: 13px; font-weight: 700; letter-spacing:.04em; color: var(--c2); text-transform: uppercase; margin-bottom: 3px; }
+  .step h3{ font-size: 21px; margin: 0 0 5px; line-height:1.3; }
+  .step p{ font-family: -apple-system, sans-serif; font-size: 16.5px; line-height: 1.6; color:#3c3026; margin: 0 0 9px; }
+
+  .transport-line{
+    display:flex; align-items:center; gap:7px; font-family:-apple-system, sans-serif; font-size:14.5px;
+    color: var(--c2); background: var(--c3); border-radius: 8px; padding: 7px 10px; margin-bottom:10px;
+    font-weight:600;
+  }
+  .transport-line .ic{ font-size:17px; flex:0 0 auto; }
+
+  img.refimg{ width: 100%; border-radius: 10px; margin-bottom: 6px; display:block; max-height:220px; object-fit:cover; }
+  .imgcap{ font-family:-apple-system, sans-serif; font-size: 13px; color: var(--ink-soft); margin: 0 0 12px; font-style:italic; }
+
+  /* ===================== CHIPS / PANELS ===================== */
+  .chipbar{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .chip{
+    font-family: -apple-system, sans-serif; font-size: 14.5px; font-weight: 600; background: var(--paper);
+    border: 1.5px solid var(--c1); color: var(--c2); padding: 7px 12px; border-radius: 100px; cursor: pointer;
+    display:inline-flex; align-items:center; gap:5px; transition: background .15s, color .15s;
+  }
+  .chip:active{ background: var(--c1); color: #fff; }
+  .chip.curio{ border-color: #4f6b53; color: #4f6b53; }
+  .chip.curio:active{ background: #4f6b53; color: #fff; }
+  .chip .ic{ font-size:15px; }
+  .chip .count{
+    background: rgba(0,0,0,.08); border-radius:100px; padding:1px 6px; font-size:12.5px; font-weight:700;
+  }
+
+  .panel{
+    display:none; margin-top: 10px; background: #fffdf8; border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 14px 8px; font-family: -apple-system, sans-serif;
+  }
+  .panel.open{ display:block; animation: fade .2s ease; }
+  .panel p{ font-size: 16px; line-height:1.65; color:#3c3026; margin: 0 0 12px;}
+  .panel p:last-child{margin-bottom:8px;}
+
+  .curio-block{ border-bottom: 1px dashed var(--line); padding-bottom: 12px; margin-bottom: 12px; }
+  .curio-block:last-child{ border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .curio-block .ctitle{ font-weight:700; font-size:15.5px; color: var(--ink); margin-bottom:3px; display:flex; gap:6px; align-items:baseline;}
+  .curio-block .ctitle .num{ color:#4f6b53; font-size:13px; }
+
+  /* ===================== RESTAURANT CARDS ===================== */
+  .restcard{ border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin-bottom: 10px; background:#fff; overflow:hidden; }
+  .restcard.best{ border-color: var(--c1); background: var(--c3); }
+  .restcard img.rphoto{ width:100%; height:130px; object-fit:cover; border-radius:8px; margin-bottom:8px; display:block; }
+  .restcard-top{ display:flex; justify-content:space-between; align-items:baseline; gap: 8px; }
+  .restcard h4{ font-family: 'Iowan Old Style', Georgia, serif; font-size: 19px; margin:0; color: var(--ink); }
+  .price-tag{ font-family: -apple-system, sans-serif; font-size: 13px; font-weight: 700; color: var(--c2); background: rgba(0,0,0,.05); padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+  .restcard .desc{ font-size: 15.5px; color: var(--ink-soft); margin: 5px 0 7px; line-height: 1.55; }
+  .restcard .menu-list{ font-size: 15px; color:#3c3026; margin: 6px 0 0; padding-left: 0; list-style:none; }
+  .restcard .menu-list li{ margin-bottom: 4px; padding-left:14px; position:relative; }
+  .restcard .menu-list li::before{ content:"·"; position:absolute; left:2px; color: var(--c1); font-weight:700; }
+  .restcard .menu-list b{ color: var(--c2); }
+  .pick-badge{ display:inline-block; font-size: 12px; font-weight: 700; letter-spacing:.04em; text-transform: uppercase; background: var(--c1); color: #fff; padding: 2px 7px; border-radius: 5px; margin-bottom: 6px; }
+  .restcard .meta-row{ display:flex; gap:10px; margin-top:8px; font-size:13px; color: var(--ink-soft); flex-wrap:wrap; }
+  .restcard .meta-row span{ display:flex; align-items:center; gap:4px; }
+
+  /* ===================== TANGO CARDS ===================== */
+  .tangocard{ border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin-bottom: 10px; position: relative; background:#fff; }
+  .tangocard.best{ border-color: var(--c1); background: var(--c3); }
+  .tangocard h4{ font-size:18px; margin:0; font-family:'Iowan Old Style', Georgia, serif; }
+  .tangocard .loc{ font-size:13.5px; color: var(--ink-soft); margin: 2px 0 6px;}
+  .tangocard .desc{ font-size: 15.5px; color:#3c3026; line-height:1.6; margin:0 0 7px;}
+  .tangocard .meta{ font-size:13px; color: var(--c2); font-weight:700; }
+  .ribbon{ position:absolute; top:-9px; right:10px; background: var(--c1); color:#fff; font-size: 11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; padding: 3px 9px; border-radius: 5px; max-width: 70%; text-align:right; }
+
+  /* ===================== POI MINI CARDS for "more to see" ===================== */
+  .poicard{ display:flex; gap:10px; border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 10px; background:#fff; }
+  .poicard .pic{ font-size: 29px; flex:0 0 auto; width:40px; text-align:center; }
+  .poicard h4{ font-size: 17px; margin:0 0 3px; font-family:'Iowan Old Style', Georgia, serif; }
+  .poicard p{ font-size: 15px; margin:0; line-height:1.55; color:#3c3026; }
+
+  .divider-note{
+    font-family: -apple-system, sans-serif; font-size: 14.5px; color: var(--ink-soft);
+    background: var(--c3); border-left: 3px solid var(--gold); padding: 9px 11px; border-radius: 0 8px 8px 0;
+    margin: 18px 0 18px; line-height: 1.55;
+  }
+
+  .closing{
+    margin-top: 30px; text-align:center; font-family: -apple-system, sans-serif; font-size: 14.5px;
+    color: var(--ink-soft); padding: 18px 18px 30px; border-top: 1px dashed var(--line);
+  }
+
+  .footer-nav{
+    position: sticky; bottom: 0; background: #f0e6d2; border-top: 1px solid var(--line);
+    display:flex; justify-content: space-between; padding: 10px 16px; font-family: -apple-system, sans-serif; z-index: 40;
+  }
+  .navbtn{ font-size: 15.5px; font-weight: 700; color: var(--c2); background: none; border: none; padding: 8px 12px; cursor: pointer; }
+  .navbtn:disabled{ opacity: .3; }
+
+  .section-label{
+    font-family: -apple-system, sans-serif; font-size: 13px; font-weight:700; letter-spacing:.08em;
+    text-transform: uppercase; color: var(--c2); margin: 4px 0 10px;
+  }
+
+  /* ===================== FLIGHT CARD ===================== */
+  .flightcard{
+    background: #fff; border: 1.5px solid var(--c1); border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;
+    font-family: -apple-system, sans-serif;
+  }
+  .flightcard .fc-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .flightcard .fc-airline{ font-size: 13px; font-weight:700; color: var(--c2); text-transform:uppercase; letter-spacing:.03em; }
+  .flightcard .fc-number{ font-size: 13px; font-weight:700; background: var(--c3); color: var(--c2); padding:3px 10px; border-radius: 7px; }
+  .flightcard .fc-route{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .flightcard .fc-airport{ text-align:center; flex:1; }
+  .flightcard .fc-code{ font-size: 24px; font-weight:800; color: var(--ink); font-family:'Iowan Old Style', Georgia, serif; }
+  .flightcard .fc-city{ font-size: 13px; color: var(--ink-soft); margin-top:2px; }
+  .flightcard .fc-time{ font-size: 15px; font-weight:700; color: var(--c2); margin-top:4px; }
+  .flightcard .fc-plane{ font-size: 20px; color: var(--c1); flex:0 0 auto; padding: 0 4px; }
+  .flightcard .fc-bottom{ display:flex; justify-content:space-between; margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); font-size:13px; color: var(--ink-soft); }
+  .flightcard .fc-bottom b{ color: var(--ink); }
+
+  /* ===================== PHRASES TAB ===================== */
+  .phrase-section{ margin-bottom: 22px; }
+  .phrase-section h3{ font-size: 19px; margin: 0 0 12px; color: var(--c2); display:flex; align-items:center; gap:8px; }
+  .phrasecard{
+    background:#fff; border:1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 9px;
+    font-family: -apple-system, sans-serif;
+  }
+  .phrasecard .pt{ font-size: 16.5px; font-weight:700; color: var(--ink); margin-bottom:3px; }
+  .phrasecard .pes{ font-size: 17px; color: var(--c2); font-weight:700; margin-bottom:3px; }
+  .phrasecard .pron{ font-size: 13.5px; color: var(--ink-soft); font-style:italic; }
+</style>
+</head>
+<body>
+<div id="fallback-notice" style="display:block; max-width:580px; margin:0 auto; background:#c1592f; padding:20px 18px; font-family:-apple-system,sans-serif; color:#fff; text-align:center;">
+  <div style="font-size:38px; margin-bottom:6px;">⚠️ 👉 📱</div>
+  <div style="font-size:19px; font-weight:800; margin-bottom:10px; line-height:1.3;">Esta tela de prévia não roda o roteiro completo</div>
+  <div style="font-size:16px; line-height:1.65; background:rgba(0,0,0,.15); border-radius:10px; padding:12px;">
+    No iPhone: toque no ícone de <b>compartilhar</b> (quadrado com seta ↑) no canto da tela e escolha <b>"Abrir no Safari"</b> ou <b>"Abrir em..."</b>.<br><br>
+    No Android: toque nos <b>3 pontinhos</b> e escolha <b>"Abrir com Chrome"</b>.<br><br>
+    Depois disso a página abre normal, com todos os dias, fotos e botões. 🇦🇷✈️
+  </div>
+</div>
+<div class="app">
+
+  <div class="toplabel">Buenos Aires</div>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="days"></div>
+  <div id="phrases-page" style="display:none;"></div>
+
+  <div class="footer-nav">
+    <button class="navbtn" id="prevBtn">← Dia anterior</button>
+    <button class="navbtn" id="nextBtn">Próximo dia →</button>
+  </div>
+
+</div>
+
+<script>
+// ===================== THEME PER DAY =====================
+const THEMES = [
+  { c1:"#c1592f", c2:"#7a2f17", c3:"#f7e3d3", name:"terracota" },   // dia 1 - Recoleta
+  { c1:"#2f6f8f", c2:"#1c4a60", c3:"#dcecf2", name:"azul" },        // dia 2 - Centro/tango
+  { c1:"#4f6b53", c2:"#33472f", c3:"#e3ead9", name:"verde" },        // dia 3 - Palermo
+  { c1:"#b9893e", c2:"#8a611f", c3:"#f3e7cf", name:"ouro" },        // dia 4 - San Telmo/Puerto Madero
+  { c1:"#7a4a6b", c2:"#522f47", c3:"#ecdce6", name:"vinho" },       // dia 5 - partida
+];
+
+// ===================== TANGO OPTIONS (shared) =====================
+const TANGO_OPTIONS = [
+  {
+    name: "Café de los Angelitos", best: true, badge: "Sugestão principal — história + boa comida",
+    loc: "Av. Rivadavia esq. Rincón, no Centro — bem no seu trajeto do dia 2",
+    desc: "Café histórico de mais de 100 anos, antigo point de Carlos Gardel nos anos 1940 (a Era de Ouro do Tango). Salão elegante com mais de 350 fotos na parede contando a história do tango. Show com 21 artistas em cena — 5 músicos, 2 cantores e dançarinos — sem necessidade de traje de gala. Traslado de ida e volta incluído desde a Recoleta.",
+    menu: ["Entrada: gravlax de salmão rosa com cuscuz cítrico", "Entrada: humita do norte com molho picante", "Principal: bife de chorizo angus ou ravioli de camarão", "Sobremesa: cheesecake de doce de leite", "Bebidas incluídas: vinho, cerveja, refrigerante e água"],
+    img: "https://images.unsplash.com/photo-1535525153412-5a42439a210d?w=700&q=80",
+    meta: "A partir de R$ 470 / US$ 90 (show + jantar de 3 pratos) · menu executivo e VIP disponíveis"
+  },
+  {
+    name: "El Querandí",
+    loc: "San Telmo — casarão de 1920, ~15–20 min de Uber da Recoleta",
+    desc: "Show tradicional e intimista, num casarão restaurado de 1920, declarado parte da memória da cidade. Cinco casais de dançarinos, orquestra em vivo e dois cantores, contando a história do tango em cinco épocas. Mesas privadas — você não divide com estranhos.",
+    menu: ["Jantar à la carte de 3 pratos (mais de 20 opções entre entrada, principal e doce)", "Opções vegetarianas, sem glúten e veganas disponíveis", "Bebidas incluídas: vinho da casa, cerveja, refrigerante e água"],
+    meta: "A partir de R$ 310 / US$ 59 (só show) · ~R$ 410–500 / US$ 79–96 (com jantar de 3 pratos) · R$ 790 / US$ 152 (VIP)"
+  },
+  {
+    name: "El Viejo Almacén",
+    loc: "San Telmo — mais de 50 anos de tradição",
+    desc: "Uma das casas mais antigas e autênticas da cidade, com foco total na dança e na música de raiz, sem grandes produções cênicas — para quem prefere a essência ao espetáculo.",
+    menu: ["Show-only ou jantar de 3 pratos à la carte", "Aula de tango incluída em alguns ingressos"],
+    meta: "A partir de R$ 310 / US$ 59 (show) · ~R$ 490 / US$ 94 (com jantar)"
+  },
+  {
+    name: "Piazzolla Tango",
+    loc: "Microcentro — Galería Güemes, Calle Florida (literalmente no seu trajeto do dia 2)",
+    desc: "Fica dentro da bela Galería Güemes de 1915, um teatro art nouveau no subsolo. Tributo às composições de Astor Piazzolla e aos tangos tradicionais, com sexteto em vivo e aula de tango incluída no ingresso com jantar.",
+    menu: ["Cena Show: jantar à luz de velas + aula de tango + show", "Menu de 3 pratos, com opções vegetarianas"],
+    meta: "A partir de ~R$ 235 / US$ 45 (show) · ~R$ 390–495 / US$ 75–95 (com jantar)"
+  },
+  {
+    name: "Rojo Tango (Hotel Faena)",
+    loc: "Puerto Madero — o mais sofisticado",
+    desc: "O espetáculo mais luxuoso e exclusivo da cidade, num salão pequeno e refinado dentro do Hotel Faena. Show intimista e sensual, com figurinos impecáveis e menu internacional — porém significativamente mais caro que as demais opções.",
+    menu: ["Menu internacional de alta gastronomia, vários pratos", "Open bar premium com vinhos selecionados"],
+    meta: "Faixa estimada: R$ 780–1.380 / US$ 150–265 (show + jantar)"
+  },
+  {
+    name: "Señor Tango",
+    loc: "Barracas — o espetáculo mais grandioso",
+    desc: "O maior e mais produzido show de tango da cidade — chega a ter cavalos no palco. Empolgante, mas claramente menos intimista que as outras opções, mais perto de uma experiência tipo 'Broadway' do tango.",
+    menu: ["Jantar menu Platea, Executivo ou VIP (3 pratos)", "Open bar incluso"],
+    meta: "Faixa estimada: R$ 310–990 / US$ 60–190 (show a show + jantar VIP)"
+  }
+];
+
+// ===================== USEFUL PHRASES =====================
+const PHRASES = [
+  {
+    category: "Saudações e educação", icon: "👋",
+    items: [
+      {pt:"Bom dia", es:"Buenos días", pron:"bué-nos dí-as"},
+      {pt:"Boa tarde", es:"Buenas tardes", pron:"bué-nas tár-des"},
+      {pt:"Boa noite", es:"Buenas noches", pron:"bué-nas nó-tches"},
+      {pt:"Por favor", es:"Por favor", pron:"por fa-vór"},
+      {pt:"Muito obrigado(a)", es:"Muchas gracias", pron:"mú-tchas grá-sias"},
+      {pt:"De nada", es:"De nada", pron:"de ná-da"},
+      {pt:"Com licença / desculpa", es:"Disculpe / Perdón", pron:"dis-kúl-pe / per-dón"},
+      {pt:"Como você está?", es:"¿Cómo está?", pron:"kó-mo es-tá"},
+      {pt:"Tudo bem, obrigado", es:"Todo bien, gracias", pron:"tó-do bién, grá-sias"},
+      {pt:"Tchau / Até logo", es:"Chau / Hasta luego", pron:"tcháu / ás-ta lué-go"}
+    ]
+  },
+  {
+    category: "Perguntas essenciais", icon: "❓",
+    items: [
+      {pt:"Onde fica o banheiro?", es:"¿Dónde está el baño?", pron:"dón-de es-tá el bá-nio"},
+      {pt:"Onde fica o café da manhã?", es:"¿Dónde está el desayuno?", pron:"dón-de es-tá el de-sa-iú-no"},
+      {pt:"Quanto custa?", es:"¿Cuánto cuesta?", pron:"kuán-to kués-ta"},
+      {pt:"Você aceita cartão?", es:"¿Aceptan tarjeta?", pron:"a-sép-tan tar-ye-ta"},
+      {pt:"Você fala português?", es:"¿Habla portugués?", pron:"á-bla por-tu-guês"},
+      {pt:"Não entendo", es:"No entiendo", pron:"no en-tién-do"},
+      {pt:"Pode repetir, por favor?", es:"¿Puede repetir, por favor?", pron:"pué-de re-pe-tír, por fa-vór"},
+      {pt:"Pode falar mais devagar?", es:"¿Puede hablar más despacio?", pron:"pué-de a-blár más des-pá-sio"},
+      {pt:"Onde fica isso?", es:"¿Dónde queda eso?", pron:"dón-de ké-da é-so"},
+      {pt:"Fica longe daqui?", es:"¿Queda lejos de aquí?", pron:"ké-da lé-khos de a-kí"},
+      {pt:"Como chego até...?", es:"¿Cómo llego hasta...?", pron:"kó-mo llé-go ás-ta..."}
+    ]
+  },
+  {
+    category: "No restaurante", icon: "🍽️",
+    items: [
+      {pt:"A mesa para três, por favor", es:"Una mesa para tres, por favor", pron:"ú-na mé-sa pá-ra trés, por fa-vór"},
+      {pt:"O cardápio, por favor", es:"La carta, por favor", pron:"la kár-ta, por fa-vór"},
+      {pt:"O que você recomenda?", es:"¿Qué me recomienda?", pron:"ké me re-co-mién-da"},
+      {pt:"Eu queria...", es:"Quería...", pron:"ke-rí-a..."},
+      {pt:"Sem picante, por favor", es:"Sin picante, por favor", pron:"sin pi-kán-te, por fa-vór"},
+      {pt:"A conta, por favor", es:"La cuenta, por favor", pron:"la kuén-ta, por fa-vór"},
+      {pt:"Está incluído o serviço?", es:"¿Está incluido el servicio?", pron:"es-tá in-clu-í-do el ser-ví-sio"},
+      {pt:"Água com ou sem gás", es:"Agua con gas / sin gas", pron:"á-gua con gás / sin gás"},
+      {pt:"Estava delicioso", es:"Estaba riquísimo", pron:"es-tá-ba ri-kí-si-mo"}
+    ]
+  },
+  {
+    category: "Transporte e ruas", icon: "🚕",
+    items: [
+      {pt:"Para o hotel, por favor", es:"Al hotel, por favor", pron:"al o-tél, por fa-vór"},
+      {pt:"Pode me levar até aqui?", es:"¿Me puede llevar hasta aquí?", pron:"me pué-de lle-vár ás-ta a-kí"},
+      {pt:"Quanto tempo demora?", es:"¿Cuánto tiempo demora?", pron:"kuán-to tiém-po de-mó-ra"},
+      {pt:"Pode parar aqui, por favor", es:"Puede parar aquí, por favor", pron:"pué-de pa-rár a-kí, por fa-vór"},
+      {pt:"Vire à direita / esquerda", es:"Doble a la derecha / izquierda", pron:"dó-ble a la de-ré-tcha / is-kiér-da"},
+      {pt:"É seguro caminhar por aqui?", es:"¿Es seguro caminar por aquí?", pron:"es se-gú-ro ka-mi-nár por a-kí"}
+    ]
+  },
+  {
+    category: "Compras e dinheiro", icon: "💵",
+    items: [
+      {pt:"Quanto custa isso?", es:"¿Cuánto sale esto?", pron:"kuán-to sá-le és-to"},
+      {pt:"Tem um tamanho maior/menor?", es:"¿Tiene un talle más grande/chico?", pron:"tié-ne un tá-lle más grán-de / tchí-co"},
+      {pt:"Só estou olhando, obrigado(a)", es:"Solo estoy mirando, gracias", pron:"só-lo es-tói mi-rán-do, grá-sias"},
+      {pt:"Aceita dólar?", es:"¿Aceptan dólares?", pron:"a-sép-tan dó-la-res"},
+      {pt:"Pode me dar o troco em pesos?", es:"¿Me puede dar el cambio en pesos?", pron:"me pué-de dar el kám-bio en pé-sos"},
+      {pt:"Tem desconto?", es:"¿Hay descuento?", pron:"ái des-kuén-to"}
+    ]
+  },
+  {
+    category: "Emergências e saúde", icon: "🩹",
+    items: [
+      {pt:"Preciso de ajuda", es:"Necesito ayuda", pron:"ne-se-sí-to a-yú-da"},
+      {pt:"Chame uma ambulância, por favor", es:"Llame una ambulancia, por favor", pron:"llá-me ú-na am-bu-lán-sia, por fa-vór"},
+      {pt:"Onde fica a farmácia?", es:"¿Dónde está la farmacia?", pron:"dón-de es-tá la far-má-sia"},
+      {pt:"Estou me sentindo mal", es:"Me siento mal", pron:"me sién-to mál"},
+      {pt:"Perdi meu passaporte", es:"Perdí mi pasaporte", pron:"per-dí mi pa-sa-pór-te"},
+      {pt:"Qual é o número de emergência?", es:"¿Cuál es el número de emergencia?", pron:"kuál és el nú-me-ro de e-mer-khén-sia"}
+    ]
+  }
+];
+
+const DATA = [
+// ---------------------------------------------------------- DIA 1
+{
+  date: "13 ago", weekday: "Quinta-feira", title: "Chegada pelo Aeroparque e primeiro contato com a Recoleta",
+  stamp: "CHEGADA<br>AEP",
+  pace: "Ritmo: leve — aeroporto rápido, resto do dia é só passear pela vizinhança",
+  flight: { number:"AR 1261", from:"GIG", to:"AEP", date:"13/08/2026", depart:"10:15", arrive:"13:40", airline:"Aerolíneas Argentinas", booking:"CCAOCE" },
+  summary: [
+    {ic:"✈️", tt:"Aeroparque", target:"s-0-0"},
+    {ic:"🚕", tt:"Até o hotel", target:"s-0-1"},
+    {ic:"🏨", tt:"Check-in", target:"s-0-2"},
+    {ic:"🌸", tt:"Floralis + Ateneo", target:"s-0-3"},
+    {ic:"🍽️", tt:"Jantar típico", target:"s-0-4"}
+  ],
+  steps: [
+    {
+      id: "s-0-0",
+      time: "13h40 – 14h15",
+      title: "Desembarque no Aeroparque Jorge Newbery (AEP)",
+      text: "Vocês chegam pelo voo Aerolíneas Argentinas 1261 (saindo do Galeão às 10h15 e chegando às 13h40, horário local) no Aeroparque (AEP), que fica dentro da própria cidade, às margens do Rio da Prata, no bairro de Palermo — bem perto da Recoleta.",
+      transport: "Desembarque → retirada de bagagem: cerca de 20–30 min (aeroporto pequeno e ágil)",
+      curios: [
+        {title:"Por que o Aeroparque é uma vantagem", text:"O AEP fica a cerca de 15–25 minutos de carro da Recoleta — bem mais rápido do que a maioria dos trajetos entre aeroporto e hotel em outras capitais."},
+        {title:"De onde vêm os voos do Aeroparque", text:"Batizado em homenagem a Jorge Newbery, pioneiro da aviação argentina, o aeroporto concentra voos domésticos e regionais (Brasil, Uruguai, Chile, Paraguai) — por isso costuma ser bem mais rápido de desembarcar do que um aeroporto internacional grande."}
+      ]
+    },
+    {
+      id: "s-0-1",
+      time: "14h15 – 14h45",
+      title: "Deslocamento até o Vilón Recoleta",
+      text: "Do Aeroparque até o hotel são cerca de 15 a 25 minutos de carro, dependendo do trânsito — uma das viagens mais curtas que vocês vão fazer entre aeroporto e hotel em qualquer viagem internacional.",
+      transport: "Uber/Cabify: ~15–25 min · Táxi oficial com tarifa fixa: retire o ticket no totem amarelo do desembarque",
+      curios: [
+        {title:"Totem de tarifa fixa", text:"No saguão de desembarque do Aeroparque há um totem amarelo de autoatendimento: você digita o destino, número de passageiros e malas, e ele imprime um ticket com o valor exato da corrida — sem surpresas no taxímetro."},
+        {title:"Uber no aeroporto", text:"Uber, Cabify e Didi funcionam normalmente em Buenos Aires. Pelo Aeroparque, às vezes o motorista combina um ponto de encontro no estacionamento ou na rua da frente em vez de buscar direto no desembarque — não é motivo de preocupação, é só o procedimento padrão."}
+      ]
+    },
+    {
+      id: "s-0-2",
+      time: "14h45 – 16h",
+      title: "Check-in e descanso no Vilón Recoleta",
+      text: "Com a chegada mais rápida pelo Aeroparque, vocês devem estar no hotel ainda no início da tarde. Vale fazer o check-in com calma e descansar um pouco antes de sair — um bom jeito de ajustar o corpo ao fuso antes de começar os passeios.",
+      curios: [
+        {title:"Ajuste de fuso", text:"Buenos Aires está no mesmo fuso horário do Brasil o ano todo, então não há jet lag de fuso — só o cansaço natural da viagem. Ainda assim, descansar um pouco antes de sair rende um fim de tarde mais aproveitado."}
+      ]
+    },
+    {
+      id: "s-0-3",
+      time: "Fim de tarde",
+      title: "Caminhada de aquecimento: Av. Alvear → Floralis Genérica → El Ateneo",
+      text: "Saiam só no fim da tarde para conhecer o bairro com calma. Comecem pela elegante Avenida Alvear, sigam até a Floralis Genérica e depois visitem a El Ateneo Grand Splendid — cerca de 15 min a pé do hotel, em linha reta.",
+      transport: "Todo o trajeto é a pé, cerca de 25–35 min de caminhada total, sem pressa",
+      img: "https://images.unsplash.com/photo-1610726864517-3a76ddcfe98a?w=900&q=80",
+      imgCaption: "Floralis Genérica, a flor metálica de 23 metros doada à cidade em 2002",
+      curios: [
+        {title:"El Ateneo, a livraria-teatro", text:"A El Ateneo Grand Splendid já foi um teatro de 1919 e foi convertida em livraria nos anos 2000 — o palco hoje é um café e os camarotes viraram cantos de leitura. É considerada uma das livrarias mais bonitas do mundo pela National Geographic."},
+        {title:"A Floralis Genérica", text:"A flor metálica de 23 metros foi doada à cidade em 2002 pelo arquiteto argentino Eduardo Catalano. Originalmente suas pétalas abriam de manhã e fechavam à noite, num mecanismo hidráulico — hoje o mecanismo está desativado e ela fica sempre aberta."},
+        {title:"Avenida Alvear", text:"É considerada a avenida mais elegante de Buenos Aires, repleta de mansões do início do século 20 que hoje abrigam embaixadas (como a do Brasil) e hotéis de luxo, como o Alvear Palace."}
+      ]
+    },
+    {
+      id: "s-0-4",
+      time: "Jantar",
+      title: "Primeiro jantar — sabores típicos perto do hotel",
+      text: "",
+      restaurants: [
+        {name:"El Sanjuanino", best:true, price:"R$ 100–160 (US$ 20–30) / pessoa", desc:"Bodegón tradicional de 1962, especializado em comida do noroeste argentino. Ambiente simples e acolhedor, a poucos passos do Cemitério da Recoleta — um clássico para a primeira refeição na cidade.", menu:["<b>Empanadas</b> de carne, frango ou caprese (a especialidade da casa)", "<b>Locro</b> — guisado tradicional do noroeste com milho, feijão e carnes", "<b>Humita en chala</b> — creme de milho cozido na própria palha", "<b>Tamales</b> e <b>matambre al rescoldo</b>", "Sobremesa: queijo de cabra com doce de alcayota"], dist:"8 min a pé do hotel",
+         img:"https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=700&q=80"},
+        {name:"Fervor", price:"R$ 260–360 (US$ 50–70) / pessoa", desc:"Especializado em carnes e frutos do mar, num ambiente mais elegante — ótima opção se quiserem algo um pouco mais sofisticado já na primeira noite.", menu:["<b>Ojo de bife</b> grelhado", "<b>Pulpo a la parrilla</b> (polvo na grelha)", "<b>Risoto de frutos do mar</b>", "Carta de vinhos argentinos extensa"], dist:"10 min a pé do hotel"},
+        {name:"Club de la Milanesa", price:"R$ 90–150 (US$ 18–28) / pessoa", desc:"Rede bem avaliada especializada em milanesas generosas — boa opção informal se preferirem algo mais leve na primeira noite.", menu:["<b>Milanesa napolitana</b> (com presunto, queijo e molho de tomate)", "<b>Milanesa de lomo</b> com batatas especiais (cheddar e bacon)", "Menu executivo disponível"], dist:"~12 min de Uber"},
+        {name:"Duhau Restaurant (Park Hyatt)", price:"R$ 310–470 (US$ 60–90) / pessoa", desc:"Dentro do elegante Palacio Duhau, com salão interno aconchegante e terraço com jardim — uma opção mais refinada se quiserem começar a viagem com um toque de luxo tranquilo.", menu:["<b>Risoto de ossobuco</b>", "<b>Salmão grelhado</b> com legumes da estação", "Carta de vinhos premiada"], dist:"~10 min a pé do hotel, na Av. Alvear"},
+        {name:"La Bourgogne (Hotel Alvear)", price:"R$ 360–520 (US$ 70–100) / pessoa", desc:"Alta gastronomia francesa dentro do Alvear Palace Hotel — ambiente clássico e elegante, ideal para uma noite mais especial e tranquila.", menu:["<b>Foie gras</b> de entrada", "<b>Magret de pato</b> ou peixe do dia", "Sobremesas de confeitaria francesa clássica"], dist:"~7 min a pé do hotel"}
+      ]
+    }
+  ],
+  more_to_see: [
+    {ic:"⛪", title:"Cemitério da Recoleta + Igreja del Pilar", text:"Se sobrar energia (ou deixem para amanhã de manhã antes do Centro): o cemitério mais famoso da Argentina, onde está sepultada Evita Perón, ao lado da Basílica Nuestra Señora del Pilar (1732). Entrada do cemitério gratuita, aberto das 9h às 17h."},
+    {ic:"🎨", title:"Centro Cultural Recoleta", text:"Funciona no antigo convento ao lado da igreja, com exposições de arte contemporânea, dança e música — entrada gratuita, aberto de terça a domingo."}
+  ]
+},
+
+// ---------------------------------------------------------- DIA 2
+{
+  date: "14 ago", weekday: "Sexta-feira", title: "Centro histórico e a noite do tango",
+  stamp: "CENTRO<br>BUE",
+  pace: "Ritmo: moderado — região concentrada, sem trocar de bairro à toa",
+  summary: [
+    {ic:"🏛️", tt:"Plaza de Mayo", target:"s-1-0"},
+    {ic:"☕", tt:"Café Tortoni", target:"s-1-1"},
+    {ic:"🍽️", tt:"Almoço centro", target:"s-1-2"},
+    {ic:"🛍️", tt:"Galerías Pacífico", target:"s-1-3"},
+    {ic:"💃", tt:"Noite de tango", target:"s-1-4"}
+  ],
+  steps: [
+    {
+      id: "s-1-0",
+      time: "9h30",
+      title: "Uber até a Plaza de Mayo",
+      text: "Saiam do hotel por volta das 9h30 de Uber até a Plaza de Mayo, que concentra os principais pontos históricos da cidade: Casa Rosada, Catedral Metropolitana e Cabildo de Buenos Aires.",
+      transport: "Uber/táxi: ~12–18 min da Recoleta · Alternativa: Subte Linha D até estação Catedral (~20 min com caminhada)",
+      img: "https://images.unsplash.com/photo-1612294037637-ec328d0e075e?w=900&q=80",
+      imgCaption: "Casa Rosada, na Plaza de Mayo",
+      curios: [
+        {title:"O centro político da Argentina", text:"A Plaza de Mayo é o centro político do país desde a fundação da cidade e já foi palco de quase todos os grandes movimentos históricos — das Mães da Praça de Maio aos festejos de títulos da seleção."},
+        {title:"A Casa Rosada", text:"A cor rosa do palácio presidencial tem uma origem curiosa: uma das teorias mais aceitas é que, no século 19, a tinta era feita misturando cal com sangue de boi como fixador — o que dava esse tom rosado característico."},
+        {title:"O Cabildo", text:"É o edifício colonial mais antigo da praça, de onde partiu a Revolução de Maio de 1810 que deu início à independência da Argentina. Hoje funciona como museu histórico, com entrada gratuita."}
+      ]
+    },
+    {
+      id: "s-1-1",
+      time: "Manhã",
+      title: "Café Tortoni (se a fila estiver pequena)",
+      text: "Depois da visita, caminhem até o tradicional Café Tortoni para um café ou chocolate quente — vale a pena desde que a fila não esteja muito grande.",
+      transport: "8 min a pé da Plaza de Mayo, pela Av. de Mayo",
+      curios: [
+        {title:"O café mais antigo da cidade", text:"Fundado em 1858, é o café mais antigo de Buenos Aires e já recebeu Borges, Gardel, Einstein e o Príncipe de Gales. O salão preserva vitrais, lustres e mesas de mármore originais — por isso a fila costuma ser comprida nos horários de pico."},
+        {title:"Alternativa sem fila", text:"Se a fila estiver grande, uma boa troca é o Café de los Angelitos (na Av. Rivadavia), outro café histórico de mais de 100 anos — e que à noite vocês podem voltar para o show de tango."}
+      ]
+    },
+    {
+      id: "s-1-2",
+      time: "Almoço",
+      title: "Almoço no centro, perto da Calle Florida",
+      text: "Como vocês estarão circulando pela região central, vale almoçar por ali mesmo antes de seguir caminhando para as Galerías Pacífico.",
+      restaurants: [
+        {name:"Las Cuartetas", best:true, price:"R$ 50–90 (US$ 10–18) / pessoa", desc:"Pizzaria tradicional portenha desde 1934, na Av. Corrientes, a poucos minutos da Plaza de Mayo. Rápida e informal — boa pausa no meio do passeio.", menu:["<b>Fugazzeta</b> — pizza de cebola com muito queijo (clássico porteño)", "<b>Muzzarella à la piedra</b>", "<b>Fainá</b> (torta de farinha de grão-de-bico, tradicionalmente servida com a pizza)"], dist:"10 min a pé da Plaza de Mayo",
+         img:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=700&q=80"},
+        {name:"Status Bar Florida", price:"R$ 80–130 (US$ 15–25) / pessoa", desc:"Bar-restaurante clássico na própria Calle Florida, prático para uma parada rápida sem desviar do trajeto até as Galerías Pacífico.", menu:["<b>Milanesa napolitana</b> com fritas", "<b>Sanduíche de lomito</b> completo", "<b>Submarino</b> (chocolate quente clássico argentino)"], dist:"Na própria Calle Florida"},
+        {name:"El Gato Negro", price:"R$ 60–100 (US$ 12–20) / pessoa", desc:"Casa de chá e especiarias centenária (1908), com salão de almoço informal — boa opção para algo mais leve no meio do passeio.", menu:["Sanduíches e tortas salgadas", "Chás e infusões variadas", "Doces e tortas artesanais"], dist:"Av. Corrientes, ~8 min a pé"},
+        {name:"Florida Garden", price:"R$ 80–110 (US$ 15–22) / pessoa", desc:"Café histórico de esquina, ponto de encontro de escritores e artistas portenhos desde os anos 1960 — boa opção informal e cheia de história no próprio trajeto.", menu:["Sanduíches de miga (pão fininho com presunto e queijo)", "Medialunas e café com leite", "Tostados clássicos"], dist:"Esquina de Florida com Paraguay"}
+      ]
+    },
+    {
+      id: "s-1-3",
+      time: "Tarde",
+      title: "Calle Florida → Galerías Pacífico",
+      text: "Sigam caminhando pela Calle Florida até chegar às Galerías Pacífico, que ficam no mesmo sentido — evita deslocamentos extras. No meio da tarde, voltem ao hotel para descansar antes do tango.",
+      transport: "Caminhada de ~15 min pela Calle Florida (rua de pedestres, sem trânsito)",
+      curios: [
+        {title:"Os afrescos das Galerías", text:"As Galerías Pacífico ocupam um edifício de 1889 e têm afrescos no teto pintados por grandes artistas argentinos dos anos 1940, incluindo Antonio Berni e Lino Spilimbergo — vale olhar para cima."},
+        {title:"Calle Florida pedestre", text:"A rua é fechada para carros desde os anos 1970 e é uma das ruas comerciais mais movimentadas da América do Sul — ótima para observar a vida portenha sem se preocupar com trânsito."}
+      ]
+    },
+    {
+      id: "s-1-4",
+      time: "Noite",
+      title: "Noite do tango",
+      text: "Aqui estão as opções de show — incluindo o Café de los Angelitos, que reúne tradição, boa comida e fica literalmente no caminho de vocês hoje.",
+      tango: true
+    }
+  ],
+  more_to_see: [
+    {ic:"🎭", title:"Teatro Colón", text:"Um dos teatros de ópera mais importantes do mundo, a poucos minutos da Av. 9 de Julio. Há tours guiados durante o dia, caso queiram ver o interior sem assistir a um espetáculo."},
+    {ic:"🗼", title:"Obelisco e Av. 9 de Julio", text:"O cartão-postal mais clássico da cidade, considerado uma das avenidas mais largas do mundo (com até 20 faixas). Fica a poucos minutos a pé da Calle Florida, caso queiram passar por ali no caminho."}
+  ]
+},
+
+// ---------------------------------------------------------- DIA 3
+{
+  date: "15 ago", weekday: "Sábado", title: "Jardins de Palermo e a melhor parrilla da viagem",
+  stamp: "PALERMO<br>BUE",
+  pace: "Ritmo: tranquilo — tudo na mesma região, quase sem transporte",
+  summary: [
+    {ic:"🌺", tt:"Jardín Japonés", target:"s-2-0"},
+    {ic:"🌳", tt:"Bosques", target:"s-2-1"},
+    {ic:"🛍️", tt:"Palermo Soho", target:"s-2-2"},
+    {ic:"🥩", tt:"Parrilla", target:"s-2-3"}
+  ],
+  steps: [
+    {
+      id: "s-2-0",
+      time: "10h",
+      title: "Jardín Japonés",
+      text: "Saiam por volta das 10h direto para o Jardín Japonés.",
+      transport: "Uber/táxi: ~12–15 min da Recoleta",
+      img: "https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?w=900&q=80",
+      imgCaption: "Lagoa e ponte vermelha do Jardín Japonés",
+      curios: [
+        {title:"O maior jardim japonês da América Latina", text:"Criado em 1967 para celebrar a amizade entre Argentina e Japão, tem lagoa com carpas koi e uma ponte vermelha clássica, ótima para fotos."},
+        {title:"Inverno em Buenos Aires", text:"Agosto é inverno no hemisfério sul, então a grande floração das árvores de cerejeira acontece na primavera (setembro–outubro). Ainda assim, o jardim, a lagoa e a ponte continuam bonitos para visitar e fotografar a qualquer época."}
+      ]
+    },
+    {
+      id: "s-2-1",
+      time: "Manhã",
+      title: "El Rosedal e Bosques de Palermo",
+      text: "Depois da visita, caminhem tranquilamente pelo El Rosedal e pelos Bosques de Palermo.",
+      transport: "Tudo a pé, ~10 min entre as atrações",
+      curios: [
+        {title:"O Rosedal e suas 18 mil roseiras", text:"O Rosedal tem mais de 18.000 roseiras de mais de 60 variedades, plantadas desde 1914 — a maior floração acontece na primavera, mas os jardins e a ponte grega de pedra continuam lindos para caminhar mesmo no inverno."},
+        {title:"Os Bosques de Palermo", text:"É o maior parque urbano de Buenos Aires, inspirado nos grandes parques europeus do século 19. Tem lagos artificiais onde é possível alugar pedalinhos (caso queiram um programa mais leve)."}
+      ]
+    },
+    {
+      id: "s-2-2",
+      time: "Almoço + tarde",
+      title: "Palermo Soho",
+      text: "Após o almoço, sigam para Palermo Soho para passear pelas ruas, conhecer as lojas e parar para um café. Como tudo está na mesma região, vocês praticamente não vão precisar de transporte durante o dia.",
+      transport: "~10 min de Uber dos Bosques até Palermo Soho",
+      restaurants: [
+        {name:"El Preferido de Palermo", best:true, price:"R$ 130–210 (US$ 25–40) / pessoa", desc:"Bodegón histórico de esquina, irmão mais simples do Don Julio — clima de bar antigo de bairro com cozinha refinada.", menu:["<b>Milanesa de lomo</b> — uma das mais elogiadas da cidade", "<b>Vitel toné</b> (vitela fria com maionese de atum, clássico ítalo-argentino)", "<b>Conservas e latas</b> de aperitivo (sardinhas, mexilhões)"], dist:"No coração de Palermo Soho",
+         img:"https://images.unsplash.com/photo-1432139509613-5c4255815697?w=700&q=80"},
+        {name:"Cafés de Palermo Soho", price:"R$ 50–90 (US$ 10–18) / pessoa", desc:"As ruas de Palermo Soho estão cheias de cafés de especialidade e brunch — ideais para uma pausa mais leve entre as compras.", menu:["Tostadas de avocado ou queijo", "Omeletes e ovos beneditinos", "Café de origem e medialunas (croissants argentinos)"], dist:"Espalhados por toda a região"},
+        {name:"Las Pizarras", price:"R$ 100–180 (US$ 20–35) / pessoa", desc:"Bistrô de chef com menu que muda conforme o mercado do dia — ótima opção se quiserem experimentar algo diferente da parrilla tradicional no almoço.", menu:["Menu do dia (varia diariamente)", "Pratos de massa fresca caseira", "Sobremesas de confeitaria"], dist:"~8 min a pé de Palermo Soho"},
+        {name:"Club Eros", price:"R$ 60–100 (US$ 12–20) / pessoa", desc:"Bodegón de bairro despretensioso, um dos preferidos dos locais — ótimo para um almoço informal e econômico no meio do passeio.", menu:["<b>Milanesa con papas fritas</b>", "<b>Tortilla de papas</b>", "Vinho da casa em jarra"], dist:"~12 min a pé de Palermo Soho"}
+      ]
+    },
+    {
+      id: "s-2-3",
+      time: "Jantar",
+      title: "Noite de parrilla",
+      text: "Para o jantar, reservem uma boa parrilla com antecedência — esse é o jantar mais especial da viagem.",
+      img: "https://images.unsplash.com/photo-1432139509613-5c4255815697?w=900&q=80",
+      imgCaption: "Cortes argentinos na parrilla — o clássico bife de chorizo",
+      restaurants: [
+        {name:"Don Julio", best:true, price:"R$ 420–620 (US$ 80–120) / pessoa", desc:"A parrilla mais aclamada de Buenos Aires — estrela Michelin e Top 10 do mundo no ranking 50 Best Restaurants (eleito o melhor da América Latina em 2024). Fica no coração de Palermo Viejo, numa esquina histórica do século 19. Reserve com bastante antecedência pelo site oficial ou chegue cedo para enfrentar a fila — eles servem espumante e empanadas de cortesia para quem espera.", menu:["<b>Ojo de bife</b> — o corte mais pedido da casa", "<b>Bife de chorizo</b> e <b>asado de tira</b> (ótimo para dividir)", "<b>Provoleta</b> e <b>empanadas</b> de entrada", "<b>Panqueca de doce de leite</b> de sobremesa", "Adega com mais de 15 mil garrafas de vinhos argentinos"], dist:"Rua Guatemala 4699, Palermo Viejo",
+         img:"https://images.unsplash.com/photo-1558030006-450675393462?w=700&q=80"},
+        {name:"La Cabrera", price:"R$ 310–470 (US$ 60–90) / pessoa", desc:"Alternativa muito boa se não conseguirem reserva no Don Julio. Eleito várias vezes um dos 50 melhores restaurantes da América Latina. Porções generosas, vêm com guarnições extras de cortesia (até 10 acompanhamentos pequenos).", menu:["<b>Ojo de bife de chorizo</b> ou <b>bife de costilla</b> para dividir", "<b>Morcilla</b> (linguiça de sangue) grelhada na tábua", "Happy hour com 40% de desconto das 18h30 às 20h"], dist:"José A. Cabrera 5099/5127, Palermo Soho",
+         img:"https://images.unsplash.com/photo-1544025162-d76694265947?w=700&q=80"},
+        {name:"Sarkis", price:"R$ 130–180 (US$ 25–35) / pessoa", desc:"Culinária armênia, um dos melhores custo-benefício da cidade. Ótima opção se quiserem variar e economizar um pouco nessa noite.", menu:["<b>Combinado de mezzes</b> (homus, babaganoush, kibbeh)", "<b>Kebab</b> e <b>folhas de uva</b> (yaprak)", "Pão sírio fresco feito na casa"], dist:"~10 min de Uber de Palermo Soho"},
+        {name:"Las Cabras", price:"R$ 210–310 (US$ 40–60) / pessoa", desc:"Parrilla concorrida de Palermo, do mesmo dono do El Preferido — boa relação preço/qualidade, com pátio aberto agradável para noites mais quentes.", menu:["<b>Provoleta diabla</b> flambada de entrada", "Cortes variados de carne grelhada", "Ambiente rústico e acolhedor"], dist:"~10 min de Uber de Palermo Soho"},
+        {name:"El Preferido de Palermo (jantar)", price:"R$ 160–230 (US$ 30–45) / pessoa", desc:"O mesmo bodegón do almoço também funciona muito bem à noite, com clima mais intimista — opção para quem preferir não se deslocar muito.", menu:["<b>Milanesa de lomo</b>", "<b>Bife a caballo</b> (bife com ovo)", "Vinhos da casa por copo"], dist:"No coração de Palermo Soho"}
+      ]
+    }
+  ],
+  more_to_see: [
+    {ic:"🏛️", title:"MALBA (Museu de Arte Latino-Americana)", text:"Fica em Palermo Chico, a poucos minutos dos Bosques — acervo com obras de Frida Kahlo, Diego Rivera e grandes nomes latino-americanos. Aberto de quarta a segunda."},
+    {ic:"🐎", title:"Hipódromo de Palermo", text:"Se houver corridas no fim de semana da visita, é um passeio curioso e gratuito para observar a tradição das corridas de cavalo portenhas."}
+  ]
+},
+
+// ---------------------------------------------------------- DIA 4
+{
+  date: "16 ago", weekday: "Domingo", title: "Manhã colorida em La Boca, feira de San Telmo e a orla de Puerto Madero",
+  stamp: "SAN TELMO<br>BUE",
+  pace: "Ritmo: o dia mais cheio — mas tudo orquestrado para não voltar e ir na mesma direção",
+  summary: [
+    {ic:"🎨", tt:"Caminito (opcional)", target:"s-3-0"},
+    {ic:"🛒", tt:"Feira San Telmo", target:"s-3-1"},
+    {ic:"🥩", tt:"Almoço parrilla", target:"s-3-2"},
+    {ic:"🌉", tt:"Puerto Madero", target:"s-3-3"},
+    {ic:"🍷", tt:"Jantar final", target:"s-3-4"}
+  ],
+  steps: [
+    {
+      id: "s-3-0",
+      time: "9h (opcional)",
+      title: "Caminito e La Boca — antes da multidão",
+      text: "Se os três toparem um pouco mais de aventura pela manhã, o Caminito é um desvio que vale a pena: ruas coloridas, arte de rua e tango ao vivo o dia todo. Como é um bairro mais periférico, a dica geral é ir de Uber direto até a entrada, ficar na rua principal (bem turística e movimentada) e voltar também de Uber — sem caminhar para fora do circuito. Quem prefere manhã 100% tranquila pode pular esta etapa e seguir direto para San Telmo.",
+      transport: "Uber direto até a entrada do Caminito: ~20–25 min da Recoleta · depois Uber até San Telmo: ~15 min",
+      img: "https://images.unsplash.com/photo-1612361693093-e21c0ddd8aae?w=900&q=80",
+      imgCaption: "Casas coloridas do Caminito, no bairro de La Boca",
+      curios: [
+        {title:"Por que as casas são coloridas", text:"No final do século 19, imigrantes genoveses usavam sobras de tinta dos navios para pintar as casas de chapa metálica — daí o mosaico de cores que ficou famoso. O pintor Quinquela Martín reforçou essa estética nos anos 1950, transformando a rua num museu a céu aberto."},
+        {title:"O tango que dá nome à rua", text:"Curiosamente, o tango 'Caminito' não foi inspirado nesta rua, mas numa trilha na província de La Rioja. Ainda assim, o espírito da canção ficou tão associado ao lugar que hoje é impossível separar um do outro."},
+        {title:"Dica de segurança", text:"Fiquem na rua principal do Caminito (bem turística e cheia de gente), evitem se afastar para ruas adjacentes do bairro de La Boca, e prefiram pagar em dinheiro nas lojinhas — vão até no máximo às 14h, antes da multidão e enquanto a luz da manhã ainda está boa para fotos."},
+        {title:"Pertinho: La Bombonera", text:"O estádio do Boca Juniors fica a uns 400 metros do Caminito — mesmo sem jogo, vale passar perto para ver a fachada curiosa em forma de caixa de bombons, daí o nome."}
+      ]
+    },
+    {
+      id: "s-3-1",
+      time: "10h30",
+      title: "Feira de San Telmo",
+      text: "Por ser domingo, vale aproveitar a famosa Feira de San Telmo. Cheguem (ou continuem, se vieram do Caminito) por volta das 10h30 para caminhar pela Rua Defensa antes que fique muito cheia.",
+      transport: "A pé pela Calle Defensa, ou Uber direto se vierem de outro ponto da cidade",
+      curios: [
+        {title:"Mais de 50 anos de tradição", text:"A feira acontece desde 1970 ao longo da Calle Defensa e mistura antiguidades, artesanato e música de tango ao vivo na Plaza Dorrego — é normal ver pares dançando tango de graça na rua nos finais de semana."},
+        {title:"O Mercado de San Telmo", text:"Além da feira de rua, o mercado coberto histórico (de 1897) fica na própria Calle Defensa e tem estrutura de ferro original — vale uma passada mesmo sem comprar nada, só para ver a arquitetura."}
+      ]
+    },
+    {
+      id: "s-3-2",
+      time: "Almoço",
+      title: "Almoço em San Telmo, perto da feira",
+      text: "Como vocês estarão na região, vale almoçar ali mesmo antes de seguir para Puerto Madero.",
+      restaurants: [
+        {name:"La Brigada", best:true, price:"R$ 310–470 (US$ 60–90) / pessoa", desc:"Uma das parrillas mais tradicionais de San Telmo, a poucos minutos a pé da feira. Os garçons cortam a carne na mesa com a colher, sem precisar de faca — tradição da casa há décadas.", menu:["<b>Bife de chorizo</b> ou <b>costelinha</b> — a casa é famosa pelo ponto perfeito da carne", "<b>Provoleta</b> de entrada", "<b>Empanadas</b> fritas crocantes"], dist:"6 min a pé da feira",
+         img:"https://images.unsplash.com/photo-1432139509613-5c4255815697?w=700&q=80"},
+        {name:"Mercado de San Telmo", price:"R$ 50–100 (US$ 10–20) / pessoa", desc:"Dentro do próprio mercado histórico (1897), há bancas e pequenos restaurantes informais — bom para um almoço rápido e variado sem sair da área da feira.", menu:["Empanadas variadas", "Choripán (sanduíche de chouriço grelhado)", "Pratos de massa fresca de bancas locais"], dist:"Dentro da própria feira"},
+        {name:"El Desnivel", price:"R$ 100–160 (US$ 20–30) / pessoa", desc:"Bodegón despretensioso e querido pelos locais, na própria Calle Defensa — ótima opção informal e mais econômica do que a La Brigada.", menu:["<b>Costeleta de cerdo</b> (porco) grelhada", "<b>Bife de chorizo</b> tamanho família para dividir", "Ensaladas frescas de acompanhamento"], dist:"Na Calle Defensa, dentro da feira"},
+        {name:"Brick San Telmo", price:"R$ 90–150 (US$ 18–28) / pessoa", desc:"Casa de tapas e petiscos num pátio interno charmoso — boa opção mais leve e informal entre uma volta e outra na feira.", menu:["Tábua de queijos e embutidos argentinos", "Tapas variadas para compartilhar", "Sangria da casa"], dist:"~5 min a pé da Plaza Dorrego"}
+      ]
+    },
+    {
+      id: "s-3-3",
+      time: "Tarde",
+      title: "Puerto Madero e o Puente de la Mujer",
+      text: "Depois do almoço, peguem um Uber até Puerto Madero para uma caminhada tranquila pela orla até o Puente de la Mujer — passeio agradável e plano, ideal para fechar a viagem com calma.",
+      transport: "Uber: ~10–12 min de San Telmo até Puerto Madero",
+      img: "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=900&q=80",
+      imgCaption: "Puente de la Mujer, projetado por Santiago Calatrava",
+      curios: [
+        {title:"Um pôr do sol dançante", text:"O Puente de la Mujer foi projetado pelo arquiteto espanhol Santiago Calatrava (o mesmo do Museu do Amanhã, no Rio) e tem forma de um par dançando tango — a parte curva representa o homem e a estrutura reta gira como se fosse a mulher girando."},
+        {title:"Os antigos armazéns do porto", text:"Puerto Madero era a zona portuária da cidade até os anos 1910, quando ficou obsoleta para os navios maiores. Nos anos 1990 os antigos armazéns de tijolo foram revitalizados e hoje abrigam restaurantes e escritórios de luxo — um dos exemplos mais bem-sucedidos de renovação urbana da América do Sul."}
+      ]
+    },
+    {
+      id: "s-3-4",
+      time: "Último jantar",
+      title: "Jantar de despedida",
+      text: "",
+      restaurants: [
+        {name:"Cabaña Las Lilas", best:true, price:"R$ 360–570 (US$ 70–110) / pessoa", desc:"Uma das parrillas mais tradicionais da cidade, com vista para o rio em Puerto Madero — fechamento elegante para a última noite, num dos points mais conhecidos da orla.", menu:["<b>Bife de lomo</b> ou <b>ojo de bife</b>, com guarnições clássicas", "<b>Provoleta</b> e <b>empanadas</b> de entrada", "Vista para os antigos diques do porto"], dist:"Na orla de Puerto Madero, junto à ponte",
+         img:"https://images.unsplash.com/photo-1544025162-d76694265947?w=700&q=80"},
+        {name:"La Brigada", price:"R$ 310–470 (US$ 60–90) / pessoa", desc:"Se preferirem permanecer em San Telmo em vez de se deslocar até Puerto Madero, esta também é uma excelente opção para o último jantar.", menu:["<b>Bife de chorizo</b> ou <b>costelinha</b>", "Mesmo cardápio do almoço, ambiente um pouco mais intimista à noite"], dist:"San Telmo"},
+        {name:"Chila", price:"R$ 470–730 (US$ 90–140) / pessoa", desc:"Restaurante de alta gastronomia em Puerto Madero, com menu degustação contemporâneo — se quiserem fechar a viagem com algo mais sofisticado e diferente das parrillas.", menu:["Menu degustação de várias etapas (muda sazonalmente)", "Forte uso de produtos argentinos de produtores locais", "Harmonização de vinhos disponível"], dist:"Puerto Madero, perto da orla"},
+        {name:"Sottovoce Puerto Madero", price:"R$ 230–340 (US$ 45–65) / pessoa", desc:"Cozinha italiana refinada com vista para o rio — boa alternativa às parrillas para uma última noite um pouco mais leve.", menu:["<b>Risoto de frutos do mar</b>", "<b>Massas frescas</b> variadas", "Carta de vinhos italianos e argentinos"], dist:"Na orla de Puerto Madero"}
+      ]
+    }
+  ],
+  more_to_see: [
+    {ic:"🖼️", title:"Fundación Proa", text:"Centro de arte contemporânea bem ao lado do Caminito, num prédio branco minimalista — o café do último andar tem uma das melhores vistas do Riachuelo. Fechado às segundas."},
+    {ic:"⚓", title:"Reserva Ecológica Costanera Sur", text:"Se ainda houver luz do dia depois de Puerto Madero, é uma reserva natural gratuita bem ao lado, ótima para uma caminhada final mais verde e tranquila."}
+  ]
+},
+
+// ---------------------------------------------------------- DIA 5
+{
+  date: "17 ago", weekday: "Segunda-feira", title: "Volta para casa",
+  stamp: "PARTIDA<br>BUE",
+  pace: "Ritmo: manhã tranquila — voo às 9h50, sem precisar acordar de madrugada",
+  flight: { number:"AR 1264", from:"AEP", to:"GIG", date:"17/08/2026", depart:"09:50", arrive:"12:45", airline:"Aerolíneas Argentinas", booking:"CCAOCE" },
+  summary: [
+    {ic:"🧳", tt:"Malas prontas", target:"s-4-0"},
+    {ic:"🚕", tt:"Saída do hotel", target:"s-4-1"},
+    {ic:"✈️", tt:"Voo AR 1264", target:"s-4-2"}
+  ],
+  steps: [
+    {
+      id: "s-4-0",
+      time: "Noite anterior",
+      title: "Preparativos antes de dormir",
+      text: "Vale deixar as malas prontas na noite anterior e confirmar o check-in online — assim a manhã da partida fica bem mais leve para os três.",
+      curios: [
+        {title:"Check-in online", text:"A Aerolíneas Argentinas libera o check-in online entre 24h e 48h antes do voo — fazer isso na noite anterior evita fila extra de balcão na manhã da viagem."}
+      ]
+    },
+    {
+      id: "s-4-1",
+      time: "7h – 7h15",
+      title: "Café da manhã com calma e saída do hotel",
+      text: "Como o voo (AR 1264) sai às 9h50, não há necessidade de madrugar: aproveitem o café da manhã do hotel com tranquilidade e saiam por volta das 7h às 7h15, chegando ao Aeroparque com boa margem antes do horário recomendado de check-in.",
+      transport: "Uber/táxi pré-agendado: ~15–25 min até o Aeroparque",
+      curios: [
+        {title:"Margem de segurança", text:"Para voos regionais como este, o recomendado é chegar ao aeroporto com pelo menos 1h30 a 2h de antecedência — saindo do hotel às 7h–7h15, vocês chegam por volta das 7h30, com folga tranquila antes do voo das 9h50."}
+      ]
+    },
+    {
+      id: "s-4-2",
+      time: "9h50",
+      title: "Voo AR 1264 — Buenos Aires (AEP) → Rio de Janeiro (GIG)",
+      text: "Decolagem às 9h50 do Aeroparque (AEP), com chegada prevista no Galeão (GIG) às 12h45, horário local. Voo operado e vendido pela Aerolíneas Argentinas.",
+      curios: [
+        {title:"Dados da reserva", text:"Voo AR 1264 · Aerolíneas Argentinas · Classe Economy · Código de reserva CCAOCE · Trecho AEP → GIG, 17/08/2026."}
+      ]
+    }
+  ]
+}
+];
+
+
+</script>
+<script>
+try {
+  function applyTheme(idx){
+  const t = THEMES[idx];
+  document.documentElement.style.setProperty('--c1', t.c1);
+  document.documentElement.style.setProperty('--c2', t.c2);
+  document.documentElement.style.setProperty('--c3', t.c3);
+  document.documentElement.style.setProperty('--day-color', t.c1);
+}
+
+function weekdayAbbrev(w){
+  const map = { "Quinta-feira":"Qui", "Sexta-feira":"Sex", "Sábado":"Sáb", "Domingo":"Dom", "Segunda-feira":"Seg", "Terça-feira":"Ter", "Quarta-feira":"Qua" };
+  return map[w] || w.slice(0,3);
+}
+
+function renderTabs(){
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML = DATA.map((d,i) => `
+    <div class="tab ${i===0?'active':''}" data-idx="${i}" onclick="goToDay(${i})" style="${i===0?`color:${THEMES[0].c2};border-bottom-color:${THEMES[0].c1};`:''}">
+      <div class="d">${d.date.split(' ')[0]}</div>
+      <div class="wd">${weekdayAbbrev(d.weekday)}</div>
+      <div class="m">${d.date.split(' ')[1]}</div>
+    </div>
+  `).join('');
+  // phrases tab, appended at the end
+  tabs.innerHTML += `
+    <div class="tab phrasetab" onclick="goToPhrases()">
+      <div class="d">🗣️</div>
+      <div class="wd">Frases</div>
+      <div class="m">úteis</div>
+    </div>
+  `;
+}
+
+function curioBlock(curios, img, imgCaption){
+  let html = img ? `<img class="refimg" src="${img}" alt="">${imgCaption ? `<div class="imgcap">${imgCaption}</div>` : ''}` : '';
+  html += curios.map((c,i) => `
+    <div class="curio-block">
+      <div class="ctitle"><span class="num">✦</span> ${c.title}</div>
+      <p>${c.text}</p>
+    </div>
+  `).join('');
+  return html;
+}
+
+function restaurantBlock(list){
+  return list.map(r => `
+    <div class="restcard ${r.best?'best':''}">
+      ${r.img ? `<img class="rphoto" src="${r.img}" alt="${r.name}">` : ''}
+      ${r.best ? '<div class="pick-badge">Sugestão principal</div>' : ''}
+      <div class="restcard-top">
+        <h4>${r.name}</h4>
+        <span class="price-tag">${r.price}</span>
+      </div>
+      <div class="desc">${r.desc}</div>
+      <ul class="menu-list">${r.menu.map(m => `<li>${m}</li>`).join('')}</ul>
+      ${r.dist ? `<div class="meta-row"><span>📍 ${r.dist}</span></div>` : ''}
+    </div>
+  `).join('');
+}
+
+function tangoBlock(){
+  return TANGO_OPTIONS.map(t => `
+    <div class="tangocard ${t.best?'best':''}">
+      ${t.badge ? `<div class="ribbon">${t.badge}</div>` : ''}
+      ${t.img ? `<img class="rphoto" src="${t.img}" alt="${t.name}">` : ''}
+      <h4>${t.name}</h4>
+      <div class="loc">${t.loc}</div>
+      <p class="desc">${t.desc}</p>
+      <ul class="menu-list">${t.menu.map(m => `<li>${m}</li>`).join('')}</ul>
+      <div class="meta">${t.meta}</div>
+    </div>
+  `).join('');
+}
+
+function moreToSeeBlock(items){
+  return items.map(p => `
+    <div class="poicard">
+      <div class="pic">${p.ic}</div>
+      <div><h4>${p.title}</h4><p>${p.text}</p></div>
+    </div>
+  `).join('');
+}
+
+function flightCardBlock(f){
+  if(!f) return '';
+  return `
+    <div class="flightcard">
+      <div class="fc-top">
+        <span class="fc-airline">✈️ ${f.airline}</span>
+        <span class="fc-number">Voo ${f.number}</span>
+      </div>
+      <div class="fc-route">
+        <div class="fc-airport">
+          <div class="fc-code">${f.from}</div>
+          <div class="fc-city">${f.from === 'AEP' ? 'Buenos Aires' : 'Rio de Janeiro'}</div>
+          <div class="fc-time">${f.depart}</div>
+        </div>
+        <div class="fc-plane">✈️</div>
+        <div class="fc-airport">
+          <div class="fc-code">${f.to}</div>
+          <div class="fc-city">${f.to === 'AEP' ? 'Buenos Aires' : 'Rio de Janeiro'}</div>
+          <div class="fc-time">${f.arrive}</div>
+        </div>
+      </div>
+      <div class="fc-bottom">
+        <span>Data: <b>${f.date}</b></span>
+        <span>Reserva: <b>${f.booking}</b></span>
+      </div>
+    </div>
+  `;
+}
+
+function summaryBlock(items){
+  if(!items) return '';
+  return `<div class="summary-row">${items.map(s => `
+    <div class="sumcard" onclick="jumpTo('${s.target}')"><div class="ic">${s.ic}</div><div class="tt">${s.tt}</div></div>
+  `).join('')}</div>`;
+}
+
+function renderDays(){
+  const wrap = document.getElementById('days');
+  wrap.innerHTML = DATA.map((d, di) => {
+    const theme = THEMES[di];
+    return `
+    <div class="day ${di===0?'active':''}" id="day-${di}" style="--c1:${theme.c1}; --c2:${theme.c2}; --c3:${theme.c3};">
+      <div class="day-banner">
+        <div class="day-banner-top">
+          <div>
+            <h2>${d.title}</h2>
+            <div class="day-tag">${d.weekday}, ${d.date}</div>
+          </div>
+          <div class="stamp">${d.stamp}</div>
+        </div>
+        <div class="pace">${d.pace}</div>
+      </div>
+      <div class="day-body">
+        ${flightCardBlock(d.flight)}
+        ${summaryBlock(d.summary)}
+        <div class="timeline">
+          ${d.steps.map((s, si) => {
+            const uid = s.id || `${di}-${si}`;
+            let chips = '';
+            let panels = '';
+            if (s.curios) {
+              chips += `<button class="chip curio" onclick="togglePanel('curio-${uid}')"><span class="ic">✦</span> Curiosidades <span class="count">${s.curios.length}</span></button>`;
+              panels += `<div class="panel" id="curio-${uid}">${curioBlock(s.curios, s.img, s.imgCaption)}</div>`;
+            }
+            if (s.restaurants) {
+              chips += `<button class="chip" onclick="togglePanel('rest-${uid}')"><span class="ic">🍽</span> Onde comer <span class="count">${s.restaurants.length}</span></button>`;
+              panels += `<div class="panel" id="rest-${uid}">${restaurantBlock(s.restaurants)}</div>`;
+            }
+            if (s.tango) {
+              chips += `<button class="chip" onclick="togglePanel('tango-${uid}')"><span class="ic">💃</span> Opções de tango <span class="count">${TANGO_OPTIONS.length}</span></button>`;
+              panels += `<div class="panel" id="tango-${uid}">${tangoBlock()}</div>`;
+            }
+            return `
+              <div class="step" id="${uid}">
+                <div class="time">${s.time}</div>
+                <h3>${s.title}</h3>
+                ${s.text ? `<p>${s.text}</p>` : ''}
+                ${s.transport ? `<div class="transport-line"><span class="ic">🚕</span> ${s.transport}</div>` : ''}
+                ${chips ? `<div class="chipbar">${chips}</div>` : ''}
+                ${panels}
+              </div>
+            `;
+          }).join('')}
+        </div>
+        ${d.more_to_see ? `
+          <div class="divider-note">💡 Se sobrar tempo ou energia, outras opções perto dessa região:</div>
+          <div class="section-label">Mais para ver</div>
+          ${moreToSeeBlock(d.more_to_see)}
+        ` : ''}
+        ${di === DATA.length - 1 ? `<div class="closing">Roteiro pensado para o ritmo dos três — sem pressa, sem trocar de bairro à toa, sempre com tempo de descanso e opções para escolher no caminho. Boa viagem! ✈️</div>` : ''}
+      </div>
+    </div>
+  `;
+  }).join('');
+}
+
+function renderPhrasesPage(){
+  const wrap = document.getElementById('phrases-page');
+  wrap.innerHTML = `
+    <div class="day-banner" style="background:linear-gradient(165deg, #4f6b53, #33472f);">
+      <div class="day-banner-top">
+        <div>
+          <h2>Frases úteis em espanhol</h2>
+          <div class="day-tag">Para o dia a dia em Buenos Aires</div>
+        </div>
+        <div class="stamp" style="border-color:rgba(255,255,255,.85);">🗣️<br>ES</div>
+      </div>
+      <div class="pace">Leia em voz alta seguindo a pronúncia entre parênteses</div>
+    </div>
+    <div class="day-body">
+      ${PHRASES.map(group => `
+        <div class="phrase-section">
+          <h3>${group.icon} ${group.category}</h3>
+          ${group.items.map(p => `
+            <div class="phrasecard">
+              <div class="pt">${p.pt}</div>
+              <div class="pes">${p.es}</div>
+              <div class="pron">(${p.pron})</div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+      <div class="closing">Dica: mesmo com pronúncia imperfeita, os portenhos costumam ser pacientes e ajudam a se fazer entender. 🇦🇷</div>
+    </div>
+  `;
+}
+
+let currentDay = 0;
+let onPhrasesPage = false;
+
+function goToPhrases(){
+  onPhrasesPage = true;
+  document.querySelectorAll('.day').forEach(el => el.classList.remove('active'));
+  document.getElementById('phrases-page').style.display = 'block';
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tab.phrasetab').classList.add('active');
+  document.querySelector('.tab.phrasetab').style.color = '#33472f';
+  document.querySelector('.tab.phrasetab').style.borderBottomColor = '#4f6b53';
+  document.getElementById('prevBtn').disabled = true;
+  document.getElementById('nextBtn').disabled = true;
+  window.scrollTo(0,0);
+}
+
+function goToDay(idx){
+  currentDay = idx;
+  onPhrasesPage = false;
+  document.getElementById('phrases-page').style.display = 'none';
+  applyTheme(idx);
+  document.querySelectorAll('.day').forEach((el,i) => el.classList.toggle('active', i===idx));
+  document.querySelectorAll('.tab').forEach((el,i) => {
+    const isPhraseTab = el.classList.contains('phrasetab');
+    if(isPhraseTab){
+      el.classList.remove('active');
+      el.style.color = '';
+      el.style.borderBottomColor = 'transparent';
+      return;
+    }
+    el.classList.toggle('active', i===idx);
+    el.style.color = i===idx ? THEMES[i].c2 : '';
+    el.style.borderBottomColor = i===idx ? THEMES[i].c1 : 'transparent';
+  });
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === DATA.length - 1;
+  window.scrollTo(0,0);
+}
+
+function togglePanel(id){
+  const el = document.getElementById(id);
+  if(el) el.classList.toggle('open');
+}
+
+function jumpTo(targetId){
+  const el = document.getElementById(targetId);
+  if(!el) return;
+  try {
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+  } catch(e) {
+    el.scrollIntoView();
+  }
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 1300);
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => { if(currentDay>0) goToDay(currentDay-1); });
+document.getElementById('nextBtn').addEventListener('click', () => { if(currentDay<DATA.length-1) goToDay(currentDay+1); });
+
+renderTabs();
+renderDays();
+renderPhrasesPage();
+goToDay(0);
+
+  document.getElementById('fallback-notice').style.display = 'none';
+} catch (e) {
+  document.getElementById('fallback-notice').innerHTML =
+    '<div style="font-size:34px;margin-bottom:8px;">⚠️</div>' +
+    '<div style="font-size:18px;font-weight:700;margin-bottom:8px;">Não foi possível carregar aqui</div>' +
+    '<div style="font-size:15.5px;line-height:1.6;">Toque nos <b>3 pontinhos</b> ou no botão de compartilhar e escolha <b>"Abrir no navegador"</b> (Safari ou Chrome).<br><br>Erro técnico: ' + e.message + '</div>';
+}
+</script>
+</body>
+</html>
